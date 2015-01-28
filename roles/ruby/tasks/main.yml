@@ -1,6 +1,7 @@
 - name: Download rbenv
   git: repo=https://github.com/sstephenson/rbenv.git dest=~/.rbenv
   remote_user: redmine
+  environment: proxy_env
 
 - name: rbenv echo
   action: shell echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
@@ -13,21 +14,26 @@
 - name: Download ruby-build
   git: repo=https://github.com/sstephenson/ruby-build.git dest=~/.rbenv/plugins/ruby-build
   remote_user: redmine
+  environment: proxy_env
 
 - name: Install ruby-build
   action: shell /bin/bash -c "export PREFIX=~/local/src/ &&  ~/.rbenv/plugins/ruby-build/install.sh" chdir=~/.rbenv/plugins/ruby-build
   remote_user: redmine
+  environment: proxy_env
 
 - name: Install Ruby
   action: shell rbenv install {{ ruby_ver }}
   remote_user: redmine
+  environment: proxy_env
 
 - name: rbenv global 
   action: shell rbenv global {{ ruby_ver }}
   notify: rehash
   remote_user: redmine
+  environment: proxy_env
 
 - name: gem install
   action: shell rbenv exec gem install bundler --no-ri --no-rdoc
   notify: rehash
   remote_user: redmine
+  environment: proxy_env

@@ -1,6 +1,12 @@
 - name: Install_Redmine
   hosts: server
   user: root
+  vars:
+    proxy_env:
+#      Set proxy if you need
+#      http_proxy: http://your.proxy.server:port/
+#      https_proxy: http://your.proxy.server:port/
+
   roles:
     #for root
     - hostname
@@ -10,4 +16,3 @@
     - ruby
     - mariadb
     - redmine
-    - redmine-plugins

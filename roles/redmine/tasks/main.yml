@@ -1,11 +1,11 @@
 # database
 - name: add MySQL database {{ mysql_redmine_database }}
-  mysql_db: db={{ mysql_redmine_database }} state=present encoding=utf8 collation=utf8_unicode_ci
+  mysql_db: db={{ mysql_redmine_database }} login_user=root login_password="password" state=present encoding=utf8 collation=utf8_unicode_ci
   remote_user: redmine
 
 - name: add MySQL server user for localhost
   mysql_user: user=gitlab host=localhost password={{ mysql_redmine_password }} state=present
-              priv="{{ mysql_redmine_database }}.*:SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER"
+              priv="{{ mysql_redmine_database }}.*:ALL"
   remote_user: redmine
 
 # redmine
@@ -14,8 +14,9 @@
   remote_user: redmine
 
 - name: Download redmine
-  get_url: url=http://www.redmine.org/releases/redmine-{{ redmine_ver }}.tar.gz dest=~/redmine-{{ redmine_ver }}.tar.gz
+  get_url: url=http://www.redmine.org/releases/redmine-{{ redmine_ver }}.tar.gz dest=~/redmine-{{ redmine_ver }}.tar.gz timeout=60
   remote_user: redmine
+  environment: proxy_env
 
 - name: Extract tar.gz
   shell: tar zxvf redmine-{{ redmine_ver }}.tar.gz chdir=~
@@ -46,11 +47,13 @@
 - name: Install Bundle
   shell: bundle install --without development test chdir=~/redmine
   remote_user: redmine
+  environment: proxy_env
 
 #Initialize Secret Token
 - name: Initialize Secret Token
   shell: bundle exec rake generate_secret_token chdir=~/redmine
   remote_user: redmine
+  environment: proxy_env
 
 # Initialize Database
 - name: Initialize Database

@@ -2,12 +2,14 @@
 - name: gem install oauth-plugin
   gem: name=oauth-plugin state=present
   remote_user: redmine
+  environment: proxy_env
 
 - name: Download redmine_oauth_provider
   git: repo=https://github.com/suer/redmine_oauth_provider.git
        dest=~/redmine/plugins/redmine_oauth_provider
        update=no
   remote_user: redmine
+  environment: proxy_env
 
 - name: Template redmine_oauth_provider/redmine_oauth_provider.rb
   template: src=redmine_oauth_provider/redmine_oauth_provider.rb dest=~/redmine/config/initializers/redmine_oauth_provider.rb mode=0644

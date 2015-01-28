@@ -42,6 +42,7 @@ start(){
 stop(){
   echo -n $"Stopping $prog: "
   killproc -p ${PID} ${prog} -QUIT
+  rm -f ${PID}
   RETVAL=$?
   echo
 }
